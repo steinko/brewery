@@ -76,6 +76,6 @@ test.finalizedBy jacocoTestReport
 task buildDocker(type: Exec) { 
     group 'docker'
     description 'build docker image'
-    commandLine 'docker', 'build', '-t', 'steinko/brewer:1', '.'
+    commandLine 'docker', 'build', '-t', 'steinko/brewery:1', '.'
    }
 
