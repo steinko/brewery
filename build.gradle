@@ -58,6 +58,10 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	// https://mvnrepository.com/artifact/org.apache.lucene/lucene-test-framework
+    testImplementation 'org.apache.lucene:lucene-test-framework:8.3.1'
+	// https://mvnrepository.com/artifact/org.elasticsearch.test/framework
+    testImplementation 'org.elasticsearch.test:framework:7.5.0'
 }
 
 dependencyManagement {

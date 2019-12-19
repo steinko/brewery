@@ -1,19 +1,21 @@
 package com.steinko.brewery.beer;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.steinko.brewery.beer.BeerController;
 import com.steinko.brewery.beer.BeerDto;
 import com.steinko.brewery.beer.BeerService;
 import com.steinko.brewery.beer.BeerStyleEnum;
+import org.elasticsearch.test.ESTestCase;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -25,21 +27,20 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(MockitoExtension.class)
-class BeerControllerTest {
+@WebMvcTest(BeerController.class)
 
-    @Mock
+class BeerControllerTest  extends ESTestCase {
+
+    @MockBean
     BeerService beerService;
 
-    @InjectMocks
-    BeerController beerController;
-
+    @Autowired
     MockMvc mockMvc;
 
     BeerDto validBeer;
 
     @BeforeEach
-    void setUp() {
+    public void init() {
         validBeer = BeerDto.builder().id(UUID.randomUUID())
                 .version(1)
                 .beerName("Beer1")
@@ -50,12 +51,10 @@ class BeerControllerTest {
                 .createdDate(OffsetDateTime.now())
                 .lastModifiedDate(OffsetDateTime.now())
                 .build();
-
-        mockMvc = MockMvcBuilders.standaloneSetup(beerController).build();
     }
 
     @Test
-    void testGetBeerById() throws Exception {
+    public void testGetBeerById() throws Exception {
         given(beerService.findBeerById(any())).willReturn(validBeer);
 
         mockMvc.perform(get("/api/v1/beer/" + validBeer.getId()))
@@ -65,4 +64,9 @@ class BeerControllerTest {
                 .andExpect(jsonPath("$.beerName", is("Beer1")));
 
     }
+    
+   // @AfterEach
+    //public void teardown()  {  
+   // 	reset(beerService);
+    //}
 }
